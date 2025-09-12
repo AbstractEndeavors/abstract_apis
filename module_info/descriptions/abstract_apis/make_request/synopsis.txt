@@ -1,0 +1,12 @@
+ in the script: src/abstract_apis/make_request.py
+ dubbed with the title: HTTP_Request_and_Response_Handling_in_Abstract_APIs
+ was described as: The script provided, make_request.py, is part of the abstract_apis package and is found in the src/abstract_apis directory. It appears to be a utility script designed for making HTTP requests and handling the respective responses.
+
+The script starts by importing request utilities from `abstract_apis.request_utils` and setting up a logging level to suppress logs below WARNING level using python's logging library.
+
+The main function `make_request` is designed to carry out various types of HTTP requests – specifically GET and POST requests. It accepts a variety of parameters such as the request's URL, data, headers, endpoint, status code, retry_after period, raw response, response result data, loaded nested JSON responses, and authorization details. This function uses the Python `requests` library to carry out the actual HTTP requests, and its behavior is adjusted according to the specified parameters. If the HTTP method is not 'POST' or 'GET', the function raises a ValueError.
+
+Furthermore, the script includes `getRpcData` which returns a dictionary with RPC request data, and two wrapper functions `postRequest` and `getRequest` that utilize `make_request` to perform respectively HTTP POST and GET requests. 
+
+Overall, this script plays a fundamental role in the abstract_apis module by providing a mechanism to make HTTP requests and retrieve the data at specified endpoints.
+

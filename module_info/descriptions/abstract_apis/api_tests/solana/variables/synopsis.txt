@@ -1,0 +1,10 @@
+ in the script: src/abstract_apis/api_tests/solana/variables.py
+ dubbed with the title: solana_rpc_calls_test_helper_functions
+ was described as: This provided script is a portion of the abstract_apis library, specifically under the api_tests/solana subdirectory. The script contains functions that help provide sample values and variables related to Solana blockchain elements for the purpose of making RPC calls and tests. 
+
+The `sample_examples()` function defines examples of various Solana token signatures, public keys (pubkey), mint, account identifiers, delegates, signers and slots. It returns these examples to be used in the other functions or tests.
+
+The `get_sample_var(var)` function returns a dictionary which contains various example scenarios for making Solana blockchain RPC calls or requests. It uses the values from `sample_examples()` function, based on the provided `var` argument.
+
+Overall, this script essentially serves as a helper module that enables the user to supply specific parameters useful for Solana API calls while running tests. By abstracting these details, it contributes to efficacy in the creation of Solana RPC calls and potentially aids in debugging the endpoint functionalities.
+

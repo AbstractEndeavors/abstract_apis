@@ -1,0 +1,3 @@
+2025-08-23 23:42:32,406 - INFO - /home/computron/Documents/pythonTools/modules/abstract_apis/src/abstract_apis/apiConsole/apiTab/main.py - **_build_ui** - Base URL selection (existing): name 'PREDEFINED_BASE_URLS' is not defined
+2025-08-23 23:42:46,747 - INFO - /home/computron/Documents/pythonTools/modules/abstract_apis/src/abstract_apis/apiConsole/apiTab/main.py - **_build_ui** - Base URL selection (existing): index 0 has type 'tuple' but 'str' is expected
+2025-08-23 23:43:13,589 - INFO - /home/computron/Documents/pythonTools/modules/abstract_apis/src/abstract_apis/apiConsole/apiTab/main.py - **_build_ui** - Base URL selection (existing): index 0 has type 'tuple' but 'str' is expected

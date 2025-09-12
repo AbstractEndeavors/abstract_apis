@@ -1,0 +1,69 @@
+ in the script: src/abstract_apis/__init__.py
+ dubbed with the title: abstract_apis_module_initialization
+ was described as: This script is the initializing script for the `abstract_apis` module. It imports several functionalities for facilitating HTTP request management in Python applications. Specifically, it includes features from three other scripts: `make_request`, `async_make_request`, and `abstract_api_calls`. The `make_request` function is likely used for making standard HTTP requests and handling responses. The `async_make_request` may serve a similar function but for asynchronous HTTP requests. Finally, `abstract_api_calls` aggregates higher-level functionalities needed to interact with APIs.
+
+/n/n in the script: src/abstract_apis/abstract_api_calls.py
+ dubbed with the title: abstract_api_calls_url_management_and_request_handling
+ was described as: The provided script mainly focuses on handling URL management and HTTP post requests for various predefined websites. It starts by defining URLs for three different sites in the `get_urls` function and then defines multimedia API links for these websites in the `get_api_links` function. The `get_url` method is used to verify and return the appropriate URL for a given domain. The `get_api_link` function is used to concatenate the domain and the endpoint, but also ensures the URL doesn't have repeating sections. `make_request_link` uses the above helper methods to construct a complete URL and make a post HTTP request using the `postRequest` function from the imported `make_request.py` script. The `abstract_api_call` function is the high-level function that uses `make_request_link` to return the HTTP response of specific API endpoints from the given websites.
+
+/n/n in the script: src/abstract_apis/api_tests/solana/body_get.py
+ dubbed with the title: Client_Class_and_Methods_for_Solana_RPC_Calls
+ was described as: The provided script is part of the abstract_apis module and primarily deals with the `Client` class and its methods, which are used for making remote procedure call (RPC) requests to the Solana blockchain. The script imports several functions, types and classes from different modules, including `solana`, `solders`, `sqlalchemy`, `psycopg2` libraries, and an additional module, 'make_request' from within the abstract_apis module, among others. The main `Client` class has an array of methods used in blockchain data management and retrieval, like checking the client connection status (`is_connected`), getting the balance of a particular account (`get_balance`), fetching transaction and account info (`get_account_info, get_account_info_json_parsed`), getting block commitment and block time (`get_block_commitment, get_block_time`), retrieving participating nodes info in a cluster (`get_cluster_nodes`), etc. In each method, the script constructs an HTTP request, sends it to the Solana API, and handles the response, typically returning the body of the response. The script also includes functions for managing elements of the Solana blockchain like accounts, blocks, cluster nodes, transaction versions, performance samples etc., and for dealing with RPC calls.
+
+/n/n in the script: src/abstract_apis/api_tests/solana/get_api_window.py
+ dubbed with the title: Solana_RPC_API_Test_with_Interactive_GUI
+ was described as: This script is part of the `abstract_apis` Python package, specifically contained in the `api_tests` folder of the `solana` subdirectory, which indicates that it is used for testing the functionalities of Solana in the module. This script includes the `Client` class imports from `solana_rpc_client` and uses them for constructing Solana API requests and extracting the responses. It primarily provides a GUI for testing Solana RPC calls using `PySimpleGUI`. A list of Solana RPC functions is provided in `get_functions_js()`, and corresponding inputs for these functions are handled in `get_list_vars()` and `get_all_vars()`. The `get_result()`, `get_function()`, and `get_body_function()` are used for executing Solana RPC requests and fetching their outcomes. Additionally, helper functions are provided for processing of these results. The `second_window()` works as the main function for the GUI where all Gui components are defined, and events are handled. Overall, this script appears to be designed for testing, exploring and manipulating the API functionalities against the Solana blockchain in an interactive graphical interface.
+
+/n/n in the script: src/abstract_apis/api_tests/solana/solana_rpc_client.py
+ dubbed with the title: Extension_of_Solana_RPC_Calls_for_Abstract_APIs
+ was described as: This provided script lies within the abstract_apis package, specifically under the api_tests/solana subdirectory. The code presents an extension to the original module by integrating elaborate functions that manipulate elements of the Solana blockchain through RPC calls. It uses several libraries such as `solana`, `requests`, `inspect`, `asyncio`, and `json`. It also imports the `abstract_apis` and `abstract_utilities` modules created by the author.
+
+A custom `Client` class is derived from actual `solana`"s `_ClientCore`. This `Client` class is used to define an API client. Using the `get_function()` method, it fetches the corresponding function given a function string, while `call_function()` method is used to call the function and handle potential errors that might occur.
+
+To manipulate values, `convert_value()` is used which is further called by `get_conversions()` in order to obtain the arguments for the function calls. This script also includes utility functions for handling text and string manipulation, specified as `convert_to_upper()`, `convert_to_lower()`, and `convert_to_body()`.
+
+Crucially, the `get_rpc_dict()` method is used to obtain an RPC dictionary by using the assembled set of helper functions to get method names, parameters, and inputs, and also to handle potential issues like the `maxSupportedTransactionVersion` parameter. This method ultimately returns a dictionary for the specified RPC request. Overall, this script enhances the abstract_apis module to better interface with the Solana blockchain APIs in a more effective manner.
+
+/n/n in the script: src/abstract_apis/api_tests/solana/variables.py
+ dubbed with the title: solana_rpc_calls_test_helper_functions
+ was described as: This provided script is a portion of the abstract_apis library, specifically under the api_tests/solana subdirectory. The script contains functions that help provide sample values and variables related to Solana blockchain elements for the purpose of making RPC calls and tests. 
+
+The `sample_examples()` function defines examples of various Solana token signatures, public keys (pubkey), mint, account identifiers, delegates, signers and slots. It returns these examples to be used in the other functions or tests.
+
+The `get_sample_var(var)` function returns a dictionary which contains various example scenarios for making Solana blockchain RPC calls or requests. It uses the values from `sample_examples()` function, based on the provided `var` argument.
+
+Overall, this script essentially serves as a helper module that enables the user to supply specific parameters useful for Solana API calls while running tests. By abstracting these details, it contributes to efficacy in the creation of Solana RPC calls and potentially aids in debugging the endpoint functionalities.
+
+/n/n in the script: src/abstract_apis/async_make_request.py
+ dubbed with the title: async_request_management_in_abstract_apis
+ was described as: The async_make_request.py script of the abstract_apis module provides a set of methods for handling asynchronous HTTP requests. It relies heavily on the asyncio and aiohttp Python libraries to manage event loops, create client sessions, and send HTTP requests.
+
+The script starts with several utility functions to manage async behavior. The `run_async` function manages the asyncio event loop to run asyncio coroutines. `get_async_response` runs an asynchronous function and returns the result using `run_async`.
+
+The `getAsyncRequest`, `postAsyncRequest`, `asyncMakeRequest`, `asyncPostRequest`, `asyncGetRequest`, and `asyncGetRpcRequest` functions are asynchronous functions that make GET, POST, or RPC requests to a specified URL. They also support handling of response codes, raw responses, response results, nested JSON loading, and authorization.
+
+Finally, the `async_get_response` is an asynchronous function that handles the response from an HTTP request. If the content type of the response is JSON, it attempts to extract the JSON content and, in case of decoding failure, it will return the raw text of the response.
+
+Overall, this script enhances the abstract_apis module with the ability to manage, execute, and handle asynchronous HTTP requests.
+
+/n/n in the script: src/abstract_apis/dbQuery.py
+ dubbed with the title: Database_Interactions_for_Response_Data_Retrieval_in_Abstract_APIs
+ was described as: The provided script titled dbQuery.py belongs to the abstract_apis module and is located at src/abstract_apis/dbQuery.py. It appears to be a database interaction script that defines a SQLAlchemy model and methods for querying response data from a database. SQLalchemy is used to create a connection with a PostgreSQL database and execute database transactions. A declarative base model is used to construct the 'response_data' table in the database with fields id, signature, method, params, and response. A unique class 'dbConfig' is defined which initializes a session with the database. A key function named 'fetch_response_data' is also defined to retrieve response data from the database based on the method name and parameters. If there is an existing entry, it returns the response associated with it. Otherwise, it returns 'None'.
+
+/n/n in the script: src/abstract_apis/make_request.py
+ dubbed with the title: HTTP_Request_and_Response_Handling_in_Abstract_APIs
+ was described as: The script provided, make_request.py, is part of the abstract_apis package and is found in the src/abstract_apis directory. It appears to be a utility script designed for making HTTP requests and handling the respective responses.
+
+The script starts by importing request utilities from `abstract_apis.request_utils` and setting up a logging level to suppress logs below WARNING level using python's logging library.
+
+The main function `make_request` is designed to carry out various types of HTTP requests – specifically GET and POST requests. It accepts a variety of parameters such as the request's URL, data, headers, endpoint, status code, retry_after period, raw response, response result data, loaded nested JSON responses, and authorization details. This function uses the Python `requests` library to carry out the actual HTTP requests, and its behavior is adjusted according to the specified parameters. If the HTTP method is not 'POST' or 'GET', the function raises a ValueError.
+
+Furthermore, the script includes `getRpcData` which returns a dictionary with RPC request data, and two wrapper functions `postRequest` and `getRequest` that utilize `make_request` to perform respectively HTTP POST and GET requests. 
+
+Overall, this script plays a fundamental role in the abstract_apis module by providing a mechanism to make HTTP requests and retrieve the data at specified endpoints.
+
+/n/n in the script: src/abstract_apis/request_utils.py
+ dubbed with the title: request_utilities_in_abstract_apis_module
+ was described as: The provided code chunk is a part of the request_utils.py script from the abstract_apis module. The script appears to provide several utility functions to facilitate the making and management of HTTP requests. The function `get_headers()` returns a dictionary containing a standard \'Content-Type\' header. The `ensure_json()` function verifies if the provided data is in JSON format and if not, it converts it into valid JSON string. The `stripit()` function is used to strip unwanted characters from strings. `make_endpoint()` and `make_url()` are helper functions used to format and clean up endpoint and URL strings respectively. `get_url()` constructs the URL by concatenating the base URL and the endpoint, after verifying and cleaning each. The `get_text_response()` function tries to access the text from a response object and returns it, if available. On failure, it simply returns None. These functions help in simplifying the construction of URLs and easier data handling.
+
+/n/n

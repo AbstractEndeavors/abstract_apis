@@ -1,0 +1,10 @@
+ in the script: src/abstract_apis/api_tests/solana/solana_rpc_client.py
+ dubbed with the title: Extension_of_Solana_RPC_Calls_for_Abstract_APIs
+ was described as: This provided script lies within the abstract_apis package, specifically under the api_tests/solana subdirectory. The code presents an extension to the original module by integrating elaborate functions that manipulate elements of the Solana blockchain through RPC calls. It uses several libraries such as `solana`, `requests`, `inspect`, `asyncio`, and `json`. It also imports the `abstract_apis` and `abstract_utilities` modules created by the author.
+
+A custom `Client` class is derived from actual `solana`"s `_ClientCore`. This `Client` class is used to define an API client. Using the `get_function()` method, it fetches the corresponding function given a function string, while `call_function()` method is used to call the function and handle potential errors that might occur.
+
+To manipulate values, `convert_value()` is used which is further called by `get_conversions()` in order to obtain the arguments for the function calls. This script also includes utility functions for handling text and string manipulation, specified as `convert_to_upper()`, `convert_to_lower()`, and `convert_to_body()`.
+
+Crucially, the `get_rpc_dict()` method is used to obtain an RPC dictionary by using the assembled set of helper functions to get method names, parameters, and inputs, and also to handle potential issues like the `maxSupportedTransactionVersion` parameter. This method ultimately returns a dictionary for the specified RPC request. Overall, this script enhances the abstract_apis module to better interface with the Solana blockchain APIs in a more effective manner.
+

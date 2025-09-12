@@ -1,0 +1,12 @@
+ in the script: src/abstract_apis/async_make_request.py
+ dubbed with the title: async_request_management_in_abstract_apis
+ was described as: The async_make_request.py script of the abstract_apis module provides a set of methods for handling asynchronous HTTP requests. It relies heavily on the asyncio and aiohttp Python libraries to manage event loops, create client sessions, and send HTTP requests.
+
+The script starts with several utility functions to manage async behavior. The `run_async` function manages the asyncio event loop to run asyncio coroutines. `get_async_response` runs an asynchronous function and returns the result using `run_async`.
+
+The `getAsyncRequest`, `postAsyncRequest`, `asyncMakeRequest`, `asyncPostRequest`, `asyncGetRequest`, and `asyncGetRpcRequest` functions are asynchronous functions that make GET, POST, or RPC requests to a specified URL. They also support handling of response codes, raw responses, response results, nested JSON loading, and authorization.
+
+Finally, the `async_get_response` is an asynchronous function that handles the response from an HTTP request. If the content type of the response is JSON, it attempts to extract the JSON content and, in case of decoding failure, it will return the raw text of the response.
+
+Overall, this script enhances the abstract_apis module with the ability to manage, execute, and handle asynchronous HTTP requests.
+
