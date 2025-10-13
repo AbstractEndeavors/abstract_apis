@@ -111,5 +111,8 @@ def run_cmd(
             capture_output=capture_output
         )
 run_local_cmd = run_local_cmd
-run_ssh_cmd = run_remote_cmd
+local_cmd = run_local_cmd
+run_remote_cmd = run_ssh_cmd
+remote_cmd = run_ssh_cmd
 run_any_cmd = run_cmd
+any_cmd = run_cmd
