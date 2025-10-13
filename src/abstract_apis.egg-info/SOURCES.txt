@@ -11,8 +11,3 @@ src/abstract_apis.egg-info/SOURCES.txt
 src/abstract_apis.egg-info/dependency_links.txt
 src/abstract_apis.egg-info/requires.txt
 src/abstract_apis.egg-info/top_level.txt
-src/abstract_apis/ssh_utils/__init__.py
-src/abstract_apis/ssh_utils/file_utils.py
-src/abstract_apis/ssh_utils/imports.py
-src/abstract_apis/ssh_utils/ssh_classes.py
-src/abstract_apis/ssh_utils/ssh_utils.py
