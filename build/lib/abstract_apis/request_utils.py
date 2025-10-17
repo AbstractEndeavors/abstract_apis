@@ -74,7 +74,9 @@ def get_values_js(url=None,data=None,headers=None,endpoint=None,auth=None,files=
     values['headers']=headers or get_headers()
     return values
 
-def get_json_response(response, response_result=None, load_nested_json=True):
+def get_json_response(response=None, response_result=None, load_nested_json=True,status_code=None,value=None):
+    if (response==None and response_result==None) and (status_code or value):
+        return jsonify({'result':value}),status_code
     response_result = response_result or 'result'
     
     try:
