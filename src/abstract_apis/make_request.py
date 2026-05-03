@@ -4,32 +4,32 @@ import logging
 logging.basicConfig(level=logging.WARNING)
 
 def make_request(url, data=None, json_data=None, headers=None, get_post=None, endpoint=None, files=None, status_code=False, retry_after=False, raw_response=False, response_result=None, load_nested_json=True, auth=None, logger=True):
-    response = None
-    
-    # values should contain 'headers', 'url', etc.
+    # Get base values (url, headers, etc)
     values = get_values_js(url=url, endpoint=endpoint, data=data, headers=headers)
     
-    # 1. Handle Files
+    # 1. Finalizing Files Structure
     if files:
+        # requests requires: {'field_name': file_handle} or [('field_name', file_handle)]
+        # If get_request_file was used, it's already {'files': f}
         values['files'] = files
-        # If sending files, 'data' must be a dict (form-data), not a JSON string/param
-        values['data'] = data 
-    # 2. Handle JSON Data
+        # When files are present, 'data' should be a dict for form-data, not JSON
+        values['data'] = data
+    
+    # 2. Finalizing JSON/Data
     elif json_data:
         values['json'] = json_data
-    # 3. Default behavior for POST/PUT if no files
     elif data and str(get_post).upper() in ['POST', 'PUT']:
+        # If no files, we assume standard JSON POST
         values['json'] = data
     
     if auth:
         values['auth'] = auth
 
-    # Determine method
-    get_post = str(get_post or ('POST' if data is None else 'GET')).upper()
+    method = str(get_post or ('POST' if data is None else 'GET')).upper()
     
-    # Use requests.request for a cleaner implementation
     try:
-        response = requests.request(method=get_post, **values)
+        # The **values expansion now includes 'files' correctly
+        response = requests.request(method=method, **values)
     except Exception as e:
         logging.error(f"Request failed: {e}")
         raise
@@ -42,20 +42,22 @@ def getRpcData(method=None,params=None,jsonrpc=None,id=None):
             "method": method,
             "params": params,
         }
-def get_request_file(file_path):
+def get_request_file(file_paths):
     """
-    Returns a dictionary structure that 'requests' understands as a 2-tuple.
-    Key = The name the server expects (e.g., 'files')
-    Value = The open file handle
+    Handles single string path or list of paths.
+    Returns a list of 2-tuples: [('files', handle), ('files', handle)]
     """
+    if isinstance(file_paths, str):
+        file_paths = [file_paths]
+        
+    files_to_send = []
     try:
-        # Open in binary mode
-        f = open(file_path, 'rb')
-        # This is a dictionary where the value effectively creates a 2-tuple 
-        # during the requests internal iteration.
-        return {'files': f} 
-    except FileNotFoundError:
-        logging.error(f"File not found: {file_path}")
+        for path in file_paths:
+            # We use 'files' as the key to match your Flask getlist('files')
+            files_to_send.append(('files', open(path, 'rb')))
+        return files_to_send
+    except FileNotFoundError as e:
+        logging.error(f"File not found: {e}")
         return None
 def postRequest(url,
                 data=None,
