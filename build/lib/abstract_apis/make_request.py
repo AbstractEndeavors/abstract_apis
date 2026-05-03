@@ -2,10 +2,23 @@ from .request_utils import *
 import logging
 # Suppress logs below WARNING level
 logging.basicConfig(level=logging.WARNING)
-def make_request(url, data=None,json_data=None, headers=None, get_post=None, endpoint=None,files=None, status_code=False, retry_after=False, raw_response=False, response_result=None, load_nested_json=True,auth=None,logger=True):
+
+def make_request(url, data=None, json_data=None, headers=None, get_post=None, endpoint=None, files=None, status_code=False, retry_after=False, raw_response=False, response_result=None, load_nested_json=True, auth=None, logger=True):
     response = None
-    values = get_values_js(url=url,endpoint=endpoint,data=data,headers=headers)
-    get_post = str(get_post or ('POST' if data == None else 'GET')).upper()
+    # Ensure get_values_js (or your helper) includes 'files' in the returned dict
+    # or manually add it to the kwargs below.
+    values = get_values_js(url=url, endpoint=endpoint, data=data, headers=headers)
+    
+    # Add files to the execution values if they exist
+    if files:
+        values['files'] = files
+    if auth:
+        values['auth'] = auth
+    if json_data:
+        values['json'] = json_data
+
+    get_post = str(get_post or ('POST' if data is None else 'GET')).upper()
+    
     if get_post == 'POST':
         response = requests.post(**values)
     elif get_post == 'GET':
@@ -33,6 +46,16 @@ def getRpcData(method=None,params=None,jsonrpc=None,id=None):
             "method": method,
             "params": params,
         }
+def get_request_file(file_path):
+    """
+    Returns a dictionary suitable for the 'files' parameter in requests.
+    """
+    try:
+        # 'rb' is essential for binary files like images/PDFs/CSVs
+        return {'file': open(file_path, 'rb')}
+    except FileNotFoundError:
+        logging.error(f"File not found: {file_path}")
+        return None
 def postRequest(url, data=None, headers=None, endpoint=None,request_file_path=None,files=None,status_code=False, retry_after=False, raw_response=False, response_result=None, load_nested_json=True,auth=None,**kwargs):
     if request_file_path:
         files = get_request_file(request_file_path)
@@ -44,6 +67,14 @@ def getRequest(url, data=None, headers=None, endpoint=None,request_file_path=Non
         files = get_request_file(request_file_path)
     data = data or kwargs
     return make_request(url, data=data, headers=headers, endpoint=endpoint, get_post='GET', files=files, status_code=status_code, retry_after=retry_after, raw_response=raw_response, response_result=response_result, load_nested_json=load_nested_json,auth=auth)
+def makeRequest(url, *args,data=None, headers=None, endpoint=None,get_post=None,request_file_path=None,files=None, status_code=False, retry_after=False, raw_response=False, response_result=None, load_nested_json=True,auth=None,**kwargs):
+    if request_file_path:
+        files = get_request_file(request_file_path)
+    data = data or kwargs
+    if not isinstance(data,dict):
+        data = {"args":make_list(data or [])}
+    data['args'] = make_list(data.get('args') or [])+list(args)
+    return make_request(url, data=data, headers=headers, endpoint=endpoint, get_post=get_post, files=files, status_code=status_code, retry_after=retry_after, raw_response=raw_response, response_result=response_result, load_nested_json=load_nested_json,auth=auth)
 
 def getRpcRequest(url, method=None,params=None,jsonrpc=None,id=None,headers=None, endpoint=None, status_code=False, retry_after=False, raw_response=False, response_result=None, load_nested_json=True,auth=None):
     data = getRpcData(method=method,params=params,jsonrpc=jsonrpc,id=id)
