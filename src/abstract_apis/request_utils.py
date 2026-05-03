@@ -132,31 +132,13 @@ def getRpcData(method=None,params=None,jsonrpc=None,id=None):
             "params": params or [],
         }
 def get_request_file(file_path, file_type=None):
-    """
-    Prepares a file for a multipart/form-data POST request.
-
-    Args:
-        file_path (str): Path to the file to upload.
-        file_type (str or list, optional): Media type(s) to filter MIME types (e.g., 'video', ['video', 'audio']).
-                                          If provided, validates the file's media type.
-
-    Returns:
-        dict: A dictionary suitable for the 'files' parameter in requests.post,
-              with the format {'file': (filename, file_object, mime_type)}.
-
-    Raises:
-        FileNotFoundError: If the file_path does not exist.
-        ValueError: If the file type is invalid or unsupported.
-    """
     if not os.path.exists(file_path):
         raise FileNotFoundError(f"File not found: {file_path}")
 
-    # Get the filename from the path
     filename = os.path.basename(file_path)
-
-
     mime_type = get_mime_type(file_path)
-
-    # Open the file and return the files dictionary
-    file = open(file_path, "rb")  # File is left open for the caller to close
-    return {"file": (filename, file, mime_type)}
+    
+    file_handle = open(file_path, "rb")
+    
+    # Change key to 'files' to match Flask's getlist('files')
+    return {"files": (filename, file_handle, mime_type)}
