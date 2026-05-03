@@ -9,9 +9,12 @@ def make_request(url, data=None, json_data=None, headers=None, get_post=None, en
     
     # 1. Finalizing Files Structure
     if files:
-        # requests requires: {'field_name': file_handle} or [('field_name', file_handle)]
-        # If get_request_file was used, it's already {'files': f}
-        values['files'] = files
+        # If files is a dict, convert it to items (list of tuples) to avoid the unpack error
+        if isinstance(files, dict):
+            values['files'] = list(files.items())
+        else:
+            values['files'] = files
+
         # When files are present, 'data' should be a dict for form-data, not JSON
         values['data'] = data
     
@@ -42,22 +45,17 @@ def getRpcData(method=None,params=None,jsonrpc=None,id=None):
             "method": method,
             "params": params,
         }
-def get_request_file(file_paths):
+def get_request_file(file_path):
     """
-    Handles single string path or list of paths.
-    Returns a list of 2-tuples: [('files', handle), ('files', handle)]
+    Returns a list of 2-tuples to satisfy the requests unpacker.
+    Format: [ (field_name, file_handle) ]
     """
-    if isinstance(file_paths, str):
-        file_paths = [file_paths]
-        
-    files_to_send = []
     try:
-        for path in file_paths:
-            # We use 'files' as the key to match your Flask getlist('files')
-            files_to_send.append(('files', open(path, 'rb')))
-        return files_to_send
-    except FileNotFoundError as e:
-        logging.error(f"File not found: {e}")
+        f = open(file_path, 'rb')
+        # Using a list of one tuple prevents the 'too many values to unpack' error
+        return [('files', f)] 
+    except FileNotFoundError:
+        logging.error(f"File not found: {file_path}")
         return None
 def postRequest(url,
                 data=None,
