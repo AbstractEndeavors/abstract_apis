@@ -5,40 +5,36 @@ logging.basicConfig(level=logging.WARNING)
 
 def make_request(url, data=None, json_data=None, headers=None, get_post=None, endpoint=None, files=None, status_code=False, retry_after=False, raw_response=False, response_result=None, load_nested_json=True, auth=None, logger=True):
     response = None
-    # Ensure get_values_js (or your helper) includes 'files' in the returned dict
-    # or manually add it to the kwargs below.
+    
+    # values should contain 'headers', 'url', etc.
     values = get_values_js(url=url, endpoint=endpoint, data=data, headers=headers)
     
-    # Add files to the execution values if they exist
+    # 1. Handle Files
     if files:
         values['files'] = files
+        # If sending files, 'data' must be a dict (form-data), not a JSON string/param
+        values['data'] = data 
+    # 2. Handle JSON Data
+    elif json_data:
+        values['json'] = json_data
+    # 3. Default behavior for POST/PUT if no files
+    elif data and str(get_post).upper() in ['POST', 'PUT']:
+        values['json'] = data
+    
     if auth:
         values['auth'] = auth
-    if json_data:
-        values['json'] = json_data
 
+    # Determine method
     get_post = str(get_post or ('POST' if data is None else 'GET')).upper()
     
-    if get_post == 'POST':
-        response = requests.post(**values)
-    elif get_post == 'GET':
-        response = requests.get(**values)
-    else:
-        raise ValueError(f"Unsupported HTTP method: {values.get('method')}")
-    got_response = get_response(response, raw_response=raw_response, response_result=response_result, load_nested_json=load_nested_json)
-    
-    got_status_code,got_retry_after = False,False
-    if status_code or retry_after:
-        if status_code:
-            got_status_code = get_status_code(response)
-        if retry_after:
-            got_retry_after = get_retry_after(response)
-        if got_status_code != False and got_retry_after == False :
-            return got_response, got_status_code
-        elif got_retry_after != False and got_status_code ==  False:
-            return got_response,  got_retry_after
-        return got_response, got_status_code, got_retry_after
-    return got_response
+    # Use requests.request for a cleaner implementation
+    try:
+        response = requests.request(method=get_post, **values)
+    except Exception as e:
+        logging.error(f"Request failed: {e}")
+        raise
+
+    return get_response(response, raw_response=raw_response, response_result=response_result, load_nested_json=load_nested_json)
 def getRpcData(method=None,params=None,jsonrpc=None,id=None):
     return {
             "jsonrpc": jsonrpc or "2.0",
@@ -46,15 +42,16 @@ def getRpcData(method=None,params=None,jsonrpc=None,id=None):
             "method": method,
             "params": params,
         }
-def get_request_file(file_path):
+def get_request_file(file_path, field_name='files'):
     """
-    Returns a dictionary suitable for the 'files' parameter in requests.
+    Returns a list of tuples to avoid 'unpacking' and 'JSON' errors.
     """
     try:
-        # 'rb' is essential for binary files like images/PDFs/CSVs
-        return {'file': open(file_path, 'rb')}
+        # We use a list of tuples: [ (key, file_handle) ]
+        # This is the most stable format for requests
+        return [(field_name, open(file_path, 'rb'))]
     except FileNotFoundError:
-        logging.error(f"File not found: {file_path}")
+        logging.error(f"Could not find file at: {file_path}")
         return None
 def postRequest(url, data=None, headers=None, endpoint=None,request_file_path=None,files=None,status_code=False, retry_after=False, raw_response=False, response_result=None, load_nested_json=True,auth=None,**kwargs):
     if request_file_path:
