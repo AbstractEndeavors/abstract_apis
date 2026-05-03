@@ -1,11 +1,31 @@
 import json,requests,aiohttp,asyncio,os
 from flask import jsonify
 from abstract_utilities import make_list,eatAll,get_mime_type
-def get_headers():
-    return {
-        'Content-Type': 'application/json',
-    }
+def get_headers(is_json=True):
+    # Only return JSON headers if we aren't sending files
+    if is_json:
+        return {'Content-Type': 'application/json'}
+    return {} # Let requests handle Content-Type for files
 
+def get_values_js(url=None, data=None, headers=None, endpoint=None, auth=None, files=None):
+    if endpoint:
+        url = get_url(url, endpoint=endpoint)
+    
+    values = {'url': url, 'auth': auth}
+    
+    # Check if we are sending files
+    if files:
+        values['files'] = files
+        values['data'] = data # data becomes form-fields when files are present
+        # CRITICAL: Do NOT set application/json headers when sending files
+        values['headers'] = headers or get_headers(is_json=False)
+    else:
+        # Standard JSON logic
+        dataKey = 'json' if isinstance(data, dict) else 'data'
+        values[dataKey] = data or {}
+        values['headers'] = headers or get_headers(is_json=True)
+        
+    return values
 def ensure_json(data):
     if isinstance(data, str):
         try:
