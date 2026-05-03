@@ -42,22 +42,51 @@ def getRpcData(method=None,params=None,jsonrpc=None,id=None):
             "method": method,
             "params": params,
         }
-def get_request_file(file_path, field_name='files'):
+def get_request_file(file_path):
     """
-    Returns a list of tuples to avoid 'unpacking' and 'JSON' errors.
+    Returns a dictionary structure that 'requests' understands as a 2-tuple.
+    Key = The name the server expects (e.g., 'files')
+    Value = The open file handle
     """
     try:
-        # We use a list of tuples: [ (key, file_handle) ]
-        # This is the most stable format for requests
-        return [(field_name, open(file_path, 'rb'))]
+        # Open in binary mode
+        f = open(file_path, 'rb')
+        # This is a dictionary where the value effectively creates a 2-tuple 
+        # during the requests internal iteration.
+        return {'files': f} 
     except FileNotFoundError:
-        logging.error(f"Could not find file at: {file_path}")
+        logging.error(f"File not found: {file_path}")
         return None
-def postRequest(url, data=None, headers=None, endpoint=None,request_file_path=None,files=None,status_code=False, retry_after=False, raw_response=False, response_result=None, load_nested_json=True,auth=None,**kwargs):
+def postRequest(url,
+                data=None,
+                headers=None,
+                endpoint=None,
+                request_file_path=None,
+                files=None,
+                status_code=False,
+                retry_after=False,
+                raw_response=False,
+                response_result=None,
+                load_nested_json=True,
+                auth=None,
+                **kwargs
+                ):
     if request_file_path:
         files = get_request_file(request_file_path)
     data = data or kwargs
-    return make_request(url, data=data, headers=headers, endpoint=endpoint, get_post='POST',files=files, status_code=status_code, retry_after=retry_after, raw_response=raw_response, response_result=response_result, load_nested_json=load_nested_json,auth=auth)
+    return make_request(url,
+                        data=data,
+                        headers=headers,
+                        endpoint=endpoint,
+                        get_post='POST',
+                        files=files,
+                        status_code=status_code,
+                        retry_after=retry_after,
+                        raw_response=raw_response,
+                        response_result=response_result,
+                        load_nested_json=load_nested_json,
+                        auth=auth
+                        )
 
 def getRequest(url, data=None, headers=None, endpoint=None,request_file_path=None,files=None, status_code=False, retry_after=False, raw_response=False, response_result=None, load_nested_json=True,auth=None,**kwargs):
     if request_file_path:
